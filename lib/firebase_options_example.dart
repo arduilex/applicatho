@@ -42,8 +42,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'VOTRE_WEB_API_KEY',
-    appId: 'VOTRE_WEB_APP_ID',
+    apiKey: 'AIzaSyDR4ecCEyKhCZ9fquNrljkTn84MgRbqJzM',
+    appId: 'applicatho',
     messagingSenderId: 'VOTRE_MESSAGING_SENDER_ID',
     projectId: 'VOTRE_PROJECT_ID',
     authDomain: 'VOTRE_PROJECT_ID.firebaseapp.com',
