@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/saint.dart';
 import '../models/verse.dart';
 import '../models/event.dart';
@@ -225,45 +226,74 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMemberCard(Member member) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: member.photoUrl.isNotEmpty
-                ? CachedNetworkImageProvider(member.photoUrl)
-                : null,
-            child: member.photoUrl.isEmpty
-                ? Text(member.name[0])
-                : null,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  member.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                Text(
-                  member.role,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () => _openMemberContact(member),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.grey[100],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: member.photoUrl.isNotEmpty
+                  ? CachedNetworkImageProvider(member.photoUrl)
+                  : null,
+              child: member.photoUrl.isEmpty
+                  ? Text(member.name[0])
+                  : null,
             ),
-          ),
-        ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    member.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    member.role,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (member.contactUrl.isNotEmpty)
+              const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.primary),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _openMemberContact(Member member) async {
+    if (member.contactUrl.isEmpty) {
+      return;
+    }
+
+    try {
+      final uri = Uri.parse(member.contactUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Impossible d\'ouvrir le contact')),
+        );
+      }
+    }
   }
 
   Widget _buildUpcomingEvents() {

@@ -6,6 +6,7 @@ class Member {
   final String role;
   final String photoUrl;
   final int order;
+  final String contactUrl;
 
   Member({
     required this.id,
@@ -13,6 +14,7 @@ class Member {
     required this.role,
     required this.photoUrl,
     required this.order,
+    required this.contactUrl,
   });
 
   factory Member.fromFirestore(DocumentSnapshot doc) {
@@ -23,6 +25,7 @@ class Member {
       role: data['role'] ?? '',
       photoUrl: data['photoUrl'] ?? '',
       order: data['order'] ?? 0,
+      contactUrl: data['contactUrl'] ?? '',
     );
   }
 
@@ -32,6 +35,7 @@ class Member {
       'role': role,
       'photoUrl': photoUrl,
       'order': order,
+      'contactUrl': contactUrl,
     };
   }
 }

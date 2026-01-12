@@ -21,14 +21,14 @@ class AppStrings {
   static const verses = 'Versets';
   static const saintOfTheDay = 'Saint du jour';
   static const verseOfTheDay = 'Verset du jour';
-  static const members = 'Membres du BDSPIE';
+  static const members = 'Membres du BDPI';
   static const upcomingEvents = 'Dates à retenir';
   static const faq = 'FAQ';
   static const legalNotice = 'Mentions légales';
 }
 
 class SocialLinks {
-  static const whatsapp = 'https://wa.me/';
-  static const instagram = 'https://instagram.com/';
-  static const youtube = 'https://youtube.com/';
+  static const whatsapp = 'https://chat.whatsapp.com/Ep3LXdu5Uh6HMAYGv48dLb';
+  static const instagram = 'https://www.instagram.com/bdspi_strasbourg?igsh=OGZhNHo4cXppMml1';
+  static const youtube = 'https://www.youtube.com/@VaticanNewsFR';
 }

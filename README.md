@@ -10,7 +10,7 @@ Applicatho est une application d'information destinée à aider les utilisateurs
 - Consulter l'agenda des événements
 - Accéder à des prières et versets bibliques
 - Localiser les églises à proximité
-- Consulter les informations sur les membres du BDSPIE
+- Consulter les informations sur les membres du BDPI
 
 ## Fonctionnalités
 
@@ -18,7 +18,7 @@ Applicatho est une application d'information destinée à aider les utilisateurs
 - Image et nom du saint du jour
 - Date actuelle
 - Verset du jour
-- Présentation des membres du BDSPIE (avec photos de profil rondes)
+- Présentation des membres du BDPI (avec photos de profil rondes)
 - Les 3 prochains événements à retenir
 - FAQ avec réponses déroulantes
 - Footer avec liens réseaux sociaux (WhatsApp, Instagram, YouTube)
@@ -89,6 +89,38 @@ flutterfire configure
    - `churches` : {name, address, latitude, longitude, phone, description}
    - `members` : {name, role, photoUrl, order}
    - `faqs` : {question, answer, order}
+
+### Configuration des règles de sécurité Firestore
+
+**IMPORTANT** : Vous devez configurer les règles de sécurité Firestore pour permettre l'authentification.
+
+#### Option 1 : Via Firebase Console (Recommandé)
+1. Allez sur [console.firebase.google.com](https://console.firebase.google.com)
+2. Sélectionnez votre projet
+3. Allez dans **Firestore Database** > **Règles**
+4. Copiez le contenu du fichier `firestore.rules` à la racine du projet
+5. Collez-le dans l'éditeur de règles
+6. Cliquez sur **Publier**
+
+#### Option 2 : Via Firebase CLI
+```bash
+# Installer Firebase CLI si ce n'est pas déjà fait
+npm install -g firebase-tools
+
+# Se connecter à Firebase
+firebase login
+
+# Initialiser Firebase dans le projet (si pas déjà fait)
+firebase init firestore
+
+# Déployer les règles
+firebase deploy --only firestore:rules
+```
+
+Les règles permettent :
+- Aux utilisateurs authentifiés de créer et mettre à jour leur propre document dans `users`
+- La lecture des collections publiques (saints, verses, events, etc.) pour tous les utilisateurs authentifiés
+- L'écriture dans les collections admin est désactivée par défaut (à configurer pour les admins)
 
 ### Configuration des permissions Android
 
@@ -216,7 +248,7 @@ class SocialLinks {
 
 ## Licence
 
-Tous droits réservés - BDSPIE
+Tous droits réservés - BDPI
 
 ## Contact
 
