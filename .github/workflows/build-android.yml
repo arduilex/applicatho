@@ -1,0 +1,57 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Permet de lancer manuellement
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Build APK
+      run: flutter build apk --release
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: applicatho-release
+        path: build/app/outputs/flutter-apk/app-release.apk
+
+    - name: Create Release (optional)
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+        tag: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          Application Applicatho - Build automatique
+
+          Pour installer :
+          1. Télécharge l'APK
+          2. Transfère sur ton téléphone
+          3. Autorise les sources inconnues
+          4. Installe l'APK
+        token: ${{ secrets.GITHUB_TOKEN }}

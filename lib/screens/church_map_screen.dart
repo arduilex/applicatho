@@ -95,11 +95,17 @@ class _ChurchMapScreenState extends State<ChurchMapScreen> {
                 options: MapOptions(
                   initialCenter: center,
                   initialZoom: 13.0,
+                  interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all,
+                  ),
                 ),
                 children: [
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.example.applicatho',
+                    userAgentPackageName: 'com.applicatho.map',
+                    maxNativeZoom: 19,
+                    minZoom: 1,
+                    maxZoom: 19,
                   ),
                   MarkerLayer(
                     markers: [

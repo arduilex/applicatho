@@ -66,7 +66,7 @@ class SocialFooter extends StatelessWidget {
                   content: const SingleChildScrollView(
                     child: Text(
                       'Application développée pour la communauté catholique/chrétienne.\n\n'
-                      'Éditeur: BDSPIE\n'
+                      'Éditeur: BDPI\n'
                       'Contact: [votre email]\n\n'
                       'Les données personnelles ne sont pas collectées par cette application.\n\n'
                       'Tous droits réservés.',

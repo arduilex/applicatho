@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'screens/home_screen.dart';
 import 'screens/church_map_screen.dart';
 import 'screens/agenda_screen.dart';
 import 'screens/prayer_screen.dart';
 import 'screens/admin_screen.dart';
+import 'screens/auth_screen.dart';
+import 'providers/auth_provider.dart' show AppAuthProvider;
+import 'services/auth_service.dart';
+import 'widgets/protected_route.dart';
 import 'utils/constants.dart';
 
 // Uncomment this line after running 'flutterfire configure'
@@ -40,37 +46,67 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppStrings.appName,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: AppColors.primary,
-        scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
-          secondary: AppColors.secondary,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.white,
-          elevation: 0,
-        ),
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+    return ChangeNotifierProvider(
+      create: (_) => AppAuthProvider(),
+      child: MaterialApp(
+        title: AppStrings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          scaffoldBackgroundColor: AppColors.background,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+            secondary: AppColors.secondary,
           ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.primary,
+            foregroundColor: AppColors.white,
+            elevation: 0,
+          ),
+          cardTheme: CardThemeData(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
+        home: const AuthWrapper(),
+        routes: {
+          '/churches': (context) => const ProtectedRoute(
+                child: ChurchMapScreen(),
+              ),
+          '/agenda': (context) => const ProtectedRoute(
+                child: AgendaScreen(),
+              ),
+          '/prayers': (context) => const ProtectedRoute(
+                child: PrayerScreen(),
+              ),
+          '/admin': (context) => const ProtectedRoute(
+                child: AdminScreen(),
+              ),
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/churches': (context) => const ChurchMapScreen(),
-        '/agenda': (context) => const AgendaScreen(),
-        '/prayers': (context) => const PrayerScreen(),
-        '/admin': (context) => const AdminScreen(),
+    );
+  }
+}
+
+// Widget qui vérifie l'authentification et redirige vers l'écran approprié
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AppAuthProvider>(
+      builder: (context, authProvider, child) {
+        // Si l'utilisateur est connecté et l'email est vérifié, afficher l'écran d'accueil
+        if (authProvider.isAuthenticated && authProvider.isEmailVerified) {
+          return const HomeScreen();
+        }
+        
+        // Sinon, afficher l'écran d'authentification
+        return const AuthScreen();
       },
     );
   }
