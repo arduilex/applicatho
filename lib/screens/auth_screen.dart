@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart' show AppAuthProvider;
 import '../utils/constants.dart';
-
+// REVIEW:
+// - Séparation claire UI / logique via Provider
+// - show AppAuthProvider limite l'import au strict nécessaire
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -11,10 +13,13 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+    // Clé du formulaire pour la validation globale
   final _formKey = GlobalKey<FormState>();
+  // Contrôleurs des champs de saisie
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+   // Indique si on est en mode inscription ou connexion
   bool _isSignUp = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -22,6 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
+        // Toujours libérer les TextEditingController pour éviter les fuites mémoire
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -160,7 +166,8 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     );
   }
-
+  /// Permet de renvoyer l'email de vérification
+  /// Utilisé depuis le dialog "Email non vérifié"
   Future<void> _resendVerificationEmail() async {
     final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
     final result = await authProvider.resendVerificationEmail();
